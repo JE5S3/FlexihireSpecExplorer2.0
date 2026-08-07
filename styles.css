@@ -1647,5 +1647,27 @@ footer {
         transition-duration: 0.01ms !important;
         animation-duration: 0.01ms !important;
     }
+   /* Card image wrapper / container */
+.fleet-card-image, 
+.card-img-top-wrapper, 
+.equipment-image-container {
+    background-color: #ffffff !important;
+    border-radius: 8px 8px 0 0; /* Adjust to match your card corner radius */
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px; /* Optional spacing around the product image */
+}
+
+/* Ensure the image blends cleanly */
+.fleet-card img,
+.card-img-top {
+    background-color: #ffffff !important;
+    mix-blend-mode: multiply; /* Blends white JPEG backgrounds seamlessly into white containers */
+    object-fit: contain;
+    width: 100%;
+    height: 200px; /* Adjust based on preferred card image height */
+}
 
 }
