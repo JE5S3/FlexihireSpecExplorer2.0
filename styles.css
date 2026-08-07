@@ -530,39 +530,28 @@ button {
 
 .machine-image {
     position: relative;
-
     display: flex;
-
     align-items: center;
     justify-content: center;
-
     height: 250px;
     padding: 20px;
-
     overflow: hidden;
 
-    /* Forces pure white background on all screen sizes, overriding media queries */
+    /* Force Safari Stacking Context & Pure White */
     background: #ffffff !important;
-
-    border-bottom: 1px solid var(--border);
+    background-color: #ffffff !important;
+    isolation: isolate; /* Prevents blend modes from bleeding into parent card background */
+    -webkit-backface-visibility: hidden; /* Fixes WebKit rendering bugs on iOS */
 }
 
 .machine-image img {
     width: 90%;
     height: 90%;
-
     object-fit: contain;
-
-    /* Multiplies the image onto the pure white container */
+    
+    /* Cross-browser blending fix for iOS Safari */
     mix-blend-mode: multiply;
-
-    /* Increases contrast & brightness to convert light grey JPEG artifacts into absolute white */
-    filter: contrast(110%) brightness(105%);
-
-    transition:
-        transform 250ms ease,
-        filter 250ms ease;
-}
+    -webkit-filter: contrast(110%) brightness(105%);
 
 .machine-card:hover .machine-image img {
     transform: scale(1.035);
