@@ -528,6 +528,7 @@ button {
    MACHINE IMAGE
    =========================================================== */
 
+/* Base machine image styling */
 .machine-image {
     position: relative;
     display: flex;
@@ -537,33 +538,49 @@ button {
     padding: 20px;
     overflow: hidden;
 
-    /* Force Safari Stacking Context & Pure White */
+    /* Explicitly override system/theme colors */
     background: #ffffff !important;
     background-color: #ffffff !important;
-    isolation: isolate; /* Prevents blend modes from bleeding into parent card background */
-    -webkit-backface-visibility: hidden; /* Fixes WebKit rendering bugs on iOS */
+    border-bottom: 1px solid var(--border);
 }
 
 .machine-image img {
     width: 90%;
     height: 90%;
     object-fit: contain;
-    
-    /* Cross-browser blending fix for iOS Safari */
     mix-blend-mode: multiply;
-    -webkit-filter: contrast(110%) brightness(105%);
     filter: contrast(110%) brightness(105%);
+    transition: transform 250ms ease;
+    
+    /* Ensure image itself doesn't carry a grey background */
+    background: transparent !important;
+    background-color: transparent !important;
 }
-.machine-card:hover .machine-image img {
-    transform: scale(1.035);
+
+/* Force pure white inside mobile media queries */
+@media (max-width: 700px) {
+    .machine-image {
+        height: 220px;
+        background: #ffffff !important;
+        background-color: #ffffff !important;
+    }
 }
 
-.machine-image.image-missing::after {
-    content: "Machine image unavailable";
+@media (max-width: 430px) {
+    .machine-image {
+        height: 200px;
+        background: #ffffff !important;
+        background-color: #ffffff !important;
+    }
+}
 
-    color: var(--text-light);
-
-    font-size: 0.85rem;
+/* Override system/mobile dark mode forces */
+@media (prefers-color-scheme: dark) {
+    .machine-image,
+    .machine-card .machine-image {
+        background: #ffffff !important;
+        background-color: #ffffff !important;
+    }
 }
 
 
