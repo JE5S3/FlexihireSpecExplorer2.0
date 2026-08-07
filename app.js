@@ -606,14 +606,27 @@ function resetFilters() {
     App.filters.outdoor = false;
     App.filters.sort = "name";
 
-    initialiseFilterState();
+    // Clear category and manufacturer Sets so nothing is selected
+    if (App.filters.categories instanceof Set) {
+        App.filters.categories.clear();
+    } else if (Array.isArray(App.filters.categories)) {
+        App.filters.categories = [];
+    }
 
+    if (App.filters.manufacturers instanceof Set) {
+        App.filters.manufacturers.clear();
+    } else if (Array.isArray(App.filters.manufacturers)) {
+        App.filters.manufacturers = [];
+    }
+
+    // Reset UI Inputs
     if (DOM.searchInput) DOM.searchInput.value = "";
     if (DOM.heightInput) DOM.heightInput.value = "";
     if (DOM.indoorFilter) DOM.indoorFilter.checked = false;
     if (DOM.outdoorFilter) DOM.outdoorFilter.checked = false;
     if (DOM.sortSelect) DOM.sortSelect.value = "name";
 
+    // Re-render sidebar checkboxes to reflect the unselected state and re-apply filters
     renderSidebar();
     applyFilters();
 }
