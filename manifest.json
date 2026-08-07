@@ -1,0 +1,57 @@
+{
+    "id": "/",
+    "name": "Flexihire Fleet Specification Explorer",
+    "short_name": "Flexihire Fleet",
+    "description": "Search, compare and explore Flexihire's fleet of access equipment including boom lifts, scissor lifts, trailer booms and vertical lifts.",
+
+    "start_url": "./",
+
+    "scope": "./",
+
+    "display": "standalone",
+
+    "orientation": "portrait-primary",
+
+    "background_color": "#f5f7fa",
+
+    "theme_color": "#f4b000",
+
+    "lang": "en-AU",
+
+    "categories": [
+        "business",
+        "productivity",
+        "utilities"
+    ],
+
+    "icons": [
+        {
+            "src": "icons/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "icons/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+
+    "screenshots": [
+        {
+            "src": "screenshots/desktop-home.png",
+            "sizes": "1280x720",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "Fleet dashboard"
+        },
+        {
+            "src": "screenshots/mobile-home.png",
+            "sizes": "540x720",
+            "type": "image/png",
+            "label": "Mobile fleet explorer"
+        }
+    ]
+}
