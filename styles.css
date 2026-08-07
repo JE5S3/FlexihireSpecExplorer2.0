@@ -552,7 +552,8 @@ button {
     /* Cross-browser blending fix for iOS Safari */
     mix-blend-mode: multiply;
     -webkit-filter: contrast(110%) brightness(105%);
-
+    filter: contrast(110%) brightness(105%);
+}
 .machine-card:hover .machine-image img {
     transform: scale(1.035);
 }
