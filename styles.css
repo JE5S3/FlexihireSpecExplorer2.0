@@ -524,66 +524,67 @@ button {
 }
 
 /* ===========================================================
-   MACHINE IMAGE
+   MACHINE IMAGE (FIXED FOR ALL MOBILE/SAFARI BROWSERS)
    =========================================================== */
 
 .machine-image {
     position: relative;
-
     display: flex;
-
     align-items: center;
     justify-content: center;
-
     height: 250px;
     padding: 20px;
-
     overflow: hidden;
 
-    /* Pure white background across all browsers and devices */
+    /* Pure white background & prevents parent card grey bleed */
     background: #ffffff !important;
     background-color: #ffffff !important;
+    background-clip: padding-box !important;
 
     border-bottom: 1px solid var(--border);
 
-    /* iOS Safari fixes for dark mode and stacking context */
+    /* Force self-contained render layer */
     isolation: isolate !important;
-    color-scheme: light !important;
-    -webkit-color-scheme: light !important;
     -webkit-backface-visibility: hidden;
 }
 
 .machine-image img {
-    /* Scale dynamically while guaranteeing full containment inside the container */
-    max-width: 100%;
-    max-height: 100%;
-    width: auto;
-    height: auto;
-
-    object-fit: contain;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
 
     background-color: transparent !important;
 
-    /* Blends image into pure white and lifts light grey artifacts */
+    /* Blending & hardware layer fixes */
     mix-blend-mode: multiply !important;
     -webkit-filter: contrast(110%) brightness(105%) !important;
     filter: contrast(110%) brightness(105%) !important;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
 
-    transition:
-        transform 250ms ease,
-        filter 250ms ease;
+    transition: transform 250ms ease;
 }
 
 .machine-card:hover .machine-image img {
-    transform: scale(1.035);
+    transform: scale(1.035) translateZ(0);
 }
 
-.machine-image.image-missing::after {
-    content: "Machine image unavailable";
+@media (max-width: 700px) {
+    .machine-image {
+        height: 220px;
+        padding: 15px;
+        background: #ffffff !important;
+        background-color: #ffffff !important;
+    }
+}
 
-    color: var(--text-light);
-
-    font-size: 0.85rem;
+@media (max-width: 430px) {
+    .machine-image {
+        height: 180px;
+        padding: 12px;
+        background: #ffffff !important;
+        background-color: #ffffff !important;
+    }
 }
 
 
