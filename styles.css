@@ -523,11 +523,6 @@ button {
     transform: translateY(-4px);
 }
 
-
-/* ===========================================================
-   MACHINE IMAGE
-   =========================================================== */
-
 /* ===========================================================
    MACHINE IMAGE
    =========================================================== */
@@ -559,8 +554,11 @@ button {
 }
 
 .machine-image img {
-    width: 90%;
-    height: 90%;
+    /* Scale dynamically while guaranteeing full containment inside the container */
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
 
     object-fit: contain;
 
@@ -588,30 +586,31 @@ button {
     font-size: 0.85rem;
 }
 
-/* Force white background in mobile media queries */
+
+/* ===========================================================
+   MOBILE MEDIA QUERIES
+   =========================================================== */
+
 @media (max-width: 700px) {
+
     .machine-image {
         height: 220px;
+        padding: 15px; /* Slightly tighter padding so the image stays well inside the borders */
         background: #ffffff !important;
         background-color: #ffffff !important;
     }
+
 }
 
 @media (max-width: 430px) {
-    .machine-image {
-        height: 200px;
-        background: #ffffff !important;
-        background-color: #ffffff !important;
-    }
-}
 
-/* Prevent system dark mode on iOS/Android from turning the background grey */
-@media (prefers-color-scheme: dark) {
     .machine-image {
+        height: 180px; /* Reduced slightly to fit small phone viewports perfectly */
+        padding: 12px;
         background: #ffffff !important;
         background-color: #ffffff !important;
-        color-scheme: light !important;
     }
+
 }
 
 /* ===========================================================
