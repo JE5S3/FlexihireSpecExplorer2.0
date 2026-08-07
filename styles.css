@@ -524,7 +524,7 @@ button {
 }
 
 /* ===========================================================
-   MACHINE IMAGE (FIXED FOR ALL MOBILE/SAFARI BROWSERS)
+   MACHINE IMAGE
    =========================================================== */
 
 .machine-image {
@@ -543,14 +543,18 @@ button {
 
     border-bottom: 1px solid var(--border);
 
-    /* Force self-contained render layer */
+    /* Force self-contained render layer across Safari & WebKit */
     isolation: isolate !important;
+    color-scheme: light !important;
+    -webkit-color-scheme: light !important;
     -webkit-backface-visibility: hidden;
 }
 
 .machine-image img {
-    width: 100% !important;
-    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    width: auto !important;
+    height: auto !important;
     object-fit: contain !important;
 
     background-color: transparent !important;
@@ -569,50 +573,6 @@ button {
     transform: scale(1.035) translateZ(0);
 }
 
-@media (max-width: 700px) {
-    .machine-image {
-        height: 220px;
-        padding: 15px;
-        background: #ffffff !important;
-        background-color: #ffffff !important;
-    }
-}
-
-@media (max-width: 430px) {
-    .machine-image {
-        height: 180px;
-        padding: 12px;
-        background: #ffffff !important;
-        background-color: #ffffff !important;
-    }
-}
-
-
-/* ===========================================================
-   MOBILE MEDIA QUERIES
-   =========================================================== */
-
-@media (max-width: 700px) {
-
-    .machine-image {
-        height: 220px;
-        padding: 15px; /* Slightly tighter padding so the image stays well inside the borders */
-        background: #ffffff !important;
-        background-color: #ffffff !important;
-    }
-
-}
-
-@media (max-width: 430px) {
-
-    .machine-image {
-        height: 180px; /* Reduced slightly to fit small phone viewports perfectly */
-        padding: 12px;
-        background: #ffffff !important;
-        background-color: #ffffff !important;
-    }
-
-}
 
 /* ===========================================================
    CATEGORY BADGE
@@ -1559,18 +1519,11 @@ footer {
         gap: 18px;
     }
 
- /* ... other existing styles above ... */
-
     .machine-image {
         height: 220px;
-        background: #ffffff !important; /* Forces solid white background on mobile */
-    }
-
-    .machine-content {
-        padding: 18px;
-    }
-
-    /* ... rest of max-width 700px styles ... */
+        padding: 15px;
+        background: #ffffff !important;
+        background-color: #ffffff !important;
     }
 
     .machine-content {
@@ -1675,11 +1628,27 @@ footer {
         grid-template-columns: 1fr 1fr;
     }
 
-   .machine-image {
-        height: 200px;
-        background: #ffffff !important; /* Forces solid white background on small mobile */
+    .machine-image {
+        height: 180px;
+        padding: 12px;
+        background: #ffffff !important;
+        background-color: #ffffff !important;
     }
 
+}
+
+
+/* ===========================================================
+   DARK MODE OVERRIDE
+   =========================================================== */
+
+@media (prefers-color-scheme: dark) {
+    .machine-image,
+    .machine-card .machine-image {
+        background: #ffffff !important;
+        background-color: #ffffff !important;
+        color-scheme: light !important;
+    }
 }
 
 
@@ -1697,66 +1666,5 @@ footer {
         transition-duration: 0.01ms !important;
         animation-duration: 0.01ms !important;
     }
-   /* Prevents system dark mode or high-contrast settings from altering image container backgrounds */
-@media (prefers-color-scheme: dark) {
-    .machine-image,
-    .machine-image img {
-        background-color: #ffffff !important;
-        background: #ffffff !important;
-    }
-}
-   /* Base machine image styling */
-.machine-image {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 250px;
-    padding: 20px;
-    overflow: hidden;
 
-    /* Explicitly override system/theme colors */
-    background: #ffffff !important;
-    background-color: #ffffff !important;
-    border-bottom: 1px solid var(--border);
-}
-
-.machine-image img {
-    width: 90%;
-    height: 90%;
-    object-fit: contain;
-  
-    filter: contrast(110%) brightness(105%);
-    transition: transform 250ms ease;
-    
-    /* Ensure image itself doesn't carry a grey background */
-    background: transparent !important;
-    background-color: transparent !important;
-}
-
-/* Force pure white inside mobile media queries */
-@media (max-width: 700px) {
-    .machine-image {
-        height: 220px;
-        background: #ffffff !important;
-        background-color: #ffffff !important;
-    }
-}
-
-@media (max-width: 430px) {
-    .machine-image {
-        height: 200px;
-        background: #ffffff !important;
-        background-color: #ffffff !important;
-    }
-}
-
-/* Override system/mobile dark mode forces */
-@media (prefers-color-scheme: dark) {
-    .machine-image,
-    .machine-card .machine-image {
-        background: #ffffff !important;
-        background-color: #ffffff !important;
-    }
-}
 }
