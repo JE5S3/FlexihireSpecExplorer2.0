@@ -541,8 +541,8 @@ button {
 
     overflow: hidden;
 
-    /* Solid pure white background to match your JPGs */
-    background: #ffffff;
+    /* Forces pure white background on all screen sizes, overriding media queries */
+    background: #ffffff !important;
 
     border-bottom: 1px solid var(--border);
 }
