@@ -1522,8 +1522,18 @@ footer {
         gap: 18px;
     }
 
+ /* ... other existing styles above ... */
+
     .machine-image {
         height: 220px;
+        background: #ffffff !important; /* Forces solid white background on mobile */
+    }
+
+    .machine-content {
+        padding: 18px;
+    }
+
+    /* ... rest of max-width 700px styles ... */
     }
 
     .machine-content {
@@ -1603,7 +1613,6 @@ footer {
 
         max-width: none;
     }
-
 }
 
 
@@ -1629,8 +1638,9 @@ footer {
         grid-template-columns: 1fr 1fr;
     }
 
-    .machine-image {
+   .machine-image {
         height: 200px;
+        background: #ffffff !important; /* Forces solid white background on small mobile */
     }
 
 }
@@ -1650,4 +1660,12 @@ footer {
         transition-duration: 0.01ms !important;
         animation-duration: 0.01ms !important;
     }
+   /* Prevents system dark mode or high-contrast settings from altering image container backgrounds */
+@media (prefers-color-scheme: dark) {
+    .machine-image,
+    .machine-image img {
+        background-color: #ffffff !important;
+        background: #ffffff !important;
+    }
+}
 }
