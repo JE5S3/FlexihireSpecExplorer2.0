@@ -528,41 +528,91 @@ button {
    MACHINE IMAGE
    =========================================================== */
 
-/* Base machine image styling */
+/* ===========================================================
+   MACHINE IMAGE
+   =========================================================== */
+
 .machine-image {
     position: relative;
+
     display: flex;
+
     align-items: center;
     justify-content: center;
+
     height: 250px;
     padding: 20px;
+
     overflow: hidden;
 
-    /* Explicitly override system/theme colors */
+    /* Pure white background across all browsers and devices */
     background: #ffffff !important;
     background-color: #ffffff !important;
-    border-bottom: 1px solid var(--border);
-}
-
-.machine-image {
-    position: relative;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    height: 250px;
-    padding: 20px;
-
-    overflow: hidden;
-
-    /* Forces pure white background on all screen sizes, overriding media queries */
-    background: #ffffff !important;
 
     border-bottom: 1px solid var(--border);
+
+    /* iOS Safari fixes for dark mode and stacking context */
+    isolation: isolate !important;
+    color-scheme: light !important;
+    -webkit-color-scheme: light !important;
+    -webkit-backface-visibility: hidden;
 }
 
+.machine-image img {
+    width: 90%;
+    height: 90%;
+
+    object-fit: contain;
+
+    background-color: transparent !important;
+
+    /* Blends image into pure white and lifts light grey artifacts */
+    mix-blend-mode: multiply !important;
+    -webkit-filter: contrast(110%) brightness(105%) !important;
+    filter: contrast(110%) brightness(105%) !important;
+
+    transition:
+        transform 250ms ease,
+        filter 250ms ease;
+}
+
+.machine-card:hover .machine-image img {
+    transform: scale(1.035);
+}
+
+.machine-image.image-missing::after {
+    content: "Machine image unavailable";
+
+    color: var(--text-light);
+
+    font-size: 0.85rem;
+}
+
+/* Force white background in mobile media queries */
+@media (max-width: 700px) {
+    .machine-image {
+        height: 220px;
+        background: #ffffff !important;
+        background-color: #ffffff !important;
+    }
+}
+
+@media (max-width: 430px) {
+    .machine-image {
+        height: 200px;
+        background: #ffffff !important;
+        background-color: #ffffff !important;
+    }
+}
+
+/* Prevent system dark mode on iOS/Android from turning the background grey */
+@media (prefers-color-scheme: dark) {
+    .machine-image {
+        background: #ffffff !important;
+        background-color: #ffffff !important;
+        color-scheme: light !important;
+    }
+}
 
 /* ===========================================================
    CATEGORY BADGE
