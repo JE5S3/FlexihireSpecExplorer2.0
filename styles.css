@@ -1725,7 +1725,7 @@ footer {
     width: 90%;
     height: 90%;
     object-fit: contain;
-    mix-blend-mode: multiply;
+  
     filter: contrast(110%) brightness(105%);
     transition: transform 250ms ease;
     
