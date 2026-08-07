@@ -553,11 +553,15 @@ button {
 
     object-fit: contain;
 
-    /* Blends any subtle off-white JPEG artifact borders into pure white */
+    /* Multiplies the image onto the pure white container */
     mix-blend-mode: multiply;
 
+    /* Increases contrast & brightness to convert light grey JPEG artifacts into absolute white */
+    filter: contrast(110%) brightness(105%);
+
     transition:
-        transform 250ms ease;
+        transform 250ms ease,
+        filter 250ms ease;
 }
 
 .machine-card:hover .machine-image img {
