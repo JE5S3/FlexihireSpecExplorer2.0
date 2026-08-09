@@ -156,7 +156,22 @@ function initialiseFilterState() {
 
 function registerEvents() {
 
-    document
+   DOM.searchInput?.addEventListener(
+        "input",
+        debounce(handleSearch, 150)
+    );
+
+    DOM.heightInput?.addEventListener(
+        "input",
+        handleHeightFilter
+    );
+
+DOM.widthInput?.addEventListener(
+    "input",
+    handleWidthFilter
+);
+
+document
     .getElementById("heightMetres")
     ?.addEventListener(
         "click",
@@ -169,28 +184,13 @@ document
         "click",
         () => setHeightUnits("feet")
     );
-   
-    DOM.searchInput?.addEventListener(
-        "input",
-        debounce(handleSearch, 150)
-    );
 
-    DOM.heightInput?.addEventListener(
-        "input",
-        handleHeightFilter
-    );
-
- DOM.widthInput?.addEventListener(
-    "input",
-    handleWidthFilter
+DOM.sortSelect?.addEventListener(
+    "change",
+    event => setSortOrder(
+        event.target.value
+    )
 );
-   
-    DOM.sortSelect?.addEventListener(
-        "change",
-        event => setSortOrder(
-            event.target.value
-        )
-    );
 
     DOM.favouritesDashboardButton?.addEventListener(
         "click",
