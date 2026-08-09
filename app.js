@@ -25,7 +25,7 @@ const App = {
 },
 
     settings: {
-        maxCompare: 3
+        maxCompare: 3,
         heightUnits: "metres"
     }
 };
