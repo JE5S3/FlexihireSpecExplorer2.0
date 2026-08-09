@@ -507,6 +507,23 @@ button {
     font-weight: 600;
 }
 
+.stat.is-selected {
+    background: var(--primary);
+    border-color: var(--primary);
+
+    box-shadow:
+        0 0 0 2px rgba(244, 176, 0, 0.18),
+        var(--shadow-md);
+}
+
+.stat.is-selected span {
+    color: #ffffff;
+}
+
+.stat.is-selected label {
+    color: #ffffff;
+}
+
 
 /* ===========================================================
    FLEET GRID
