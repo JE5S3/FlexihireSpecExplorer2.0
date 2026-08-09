@@ -665,16 +665,6 @@ function getDimensionNumber(value) {
         : 0;
 }
 
-    const cleaned = String(weight)
-        .replace(/,/g, "")
-        .replace(/[^\d.]/g, "");
-
-    const value = Number.parseFloat(cleaned);
-
-    return Number.isFinite(value)
-        ? value
-        : 0;
-}
 /* ===========================================================
    SIDEBAR RENDERING
    =========================================================== */
