@@ -15,15 +15,14 @@ const App = {
     favourites: new Set(),
     comparison: new Set(),
 
-    filters: {
-        search: "",
-        categories: new Set(),
-        manufacturers: new Set(),
-        minHeight: 0,
-        indoor: false,
-        outdoor: false,
-        sort: "name"
-    },
+ filters: {
+    search: "",
+    categories: new Set(),
+    manufacturers: new Set(),
+    minHeight: 0,
+    maxWidth: 0,
+    sort: "name"
+},
 
     settings: {
         maxCompare: 3
@@ -36,13 +35,12 @@ const App = {
    =========================================================== */
 
 const DOM = {
-    searchInput: document.getElementById("searchInput"),
-    heightInput: document.getElementById("heightInput"),
+   searchInput: document.getElementById("searchInput"),
+   heightInput: document.getElementById("heightInput"),
+   widthInput: document.getElementById("widthInput"),
 
-    indoorFilter: document.getElementById("indoorFilter"),
-    outdoorFilter: document.getElementById("outdoorFilter"),
-    sortSelect: document.getElementById("sortSelect"),
-
+   sortSelect: document.getElementById("sortSelect"),
+   
     categoryFilters: document.getElementById("categoryFilters"),
 
     selectAllButton: document.getElementById("selectAll"),
@@ -166,20 +164,11 @@ function registerEvents() {
         handleHeightFilter
     );
 
-    DOM.indoorFilter?.addEventListener(
-        "change",
-        event => setIndoorFilter(
-            event.target.checked
-        )
-    );
-
-    DOM.outdoorFilter?.addEventListener(
-        "change",
-        event => setOutdoorFilter(
-            event.target.checked
-        )
-    );
-
+ DOM.widthInput?.addEventListener(
+    "input",
+    handleWidthFilter
+);
+   
     DOM.sortSelect?.addEventListener(
         "change",
         event => setSortOrder(
@@ -226,6 +215,17 @@ function handleHeightFilter(event) {
     const value = Number.parseFloat(event.target.value);
 
     App.filters.minHeight =
+        Number.isFinite(value) && value > 0
+            ? value
+            : 0;
+
+    applyFilters();
+}
+
+function handleWidthFilter(event) {
+    const value = Number.parseFloat(event.target.value);
+
+    App.filters.maxWidth =
         Number.isFinite(value) && value > 0
             ? value
             : 0;
@@ -311,11 +311,11 @@ function showApplicationError(message) {
 function applyFilters() {
     let machines = [...App.fleet];
 
-    machines = machines.filter(matchesSearch);
-    machines = machines.filter(matchesHeight);
-    machines = machines.filter(matchesCategory);
-    machines = machines.filter(matchesManufacturer);
-    machines = machines.filter(matchesEnvironment);
+   machines = machines.filter(matchesSearch);
+   machines = machines.filter(matchesHeight);
+   machines = machines.filter(matchesWidth);
+   machines = machines.filter(matchesCategory);
+   machines = machines.filter(matchesManufacturer);
 
     machines = sortFleet(machines);
 
@@ -372,6 +372,21 @@ function matchesHeight(machine) {
         machineHeight >= minimumHeight;
 }
 
+function matchesWidth(machine) {
+    const maximumWidth = App.filters.maxWidth;
+
+    if (!maximumWidth) {
+        return true;
+    }
+
+    const machineWidth = getDimensionNumber(
+        machine.dimensions?.width
+    );
+
+    return machineWidth > 0 &&
+        machineWidth <= maximumWidth;
+}
+
 
 /* ===========================================================
    CATEGORY FILTER
@@ -403,35 +418,6 @@ function matchesManufacturer(machine) {
 }
 
 
-/* ===========================================================
-   INDOOR / OUTDOOR FILTER
-   =========================================================== */
-
-function matchesEnvironment(machine) {
-    const indoorRequired = App.filters.indoor;
-    const outdoorRequired = App.filters.outdoor;
-
-    if (!indoorRequired && !outdoorRequired) {
-        return true;
-    }
-
-    if (
-        indoorRequired &&
-        machine.indoor !== true
-    ) {
-        return false;
-    }
-
-    if (
-        outdoorRequired &&
-        machine.outdoor !== true
-    ) {
-        return false;
-    }
-
-    return true;
-}
-
 
 /* ===========================================================
    SORTING
@@ -455,6 +441,20 @@ function sortFleet(machines) {
                     getNumericValue(a.maxHeight) -
                     getNumericValue(b.maxHeight)
             );
+
+          case "width-low":
+          return sorted.sort(
+              (a, b) =>
+                  getDimensionNumber(a.dimensions?.width) -
+                  getDimensionNumber(b.dimensions?.width)
+             );
+
+case "width-high":
+    return sorted.sort(
+        (a, b) =>
+            getDimensionNumber(b.dimensions?.width) -
+            getDimensionNumber(a.dimensions?.width)
+    );
 
         case "weight-high":
             return sorted.sort(
@@ -531,25 +531,6 @@ function toggleManufacturer(manufacturer) {
     applyFilters();
 }
 
-
-/* ===========================================================
-   ENVIRONMENT FILTER CONTROLS
-   =========================================================== */
-
-function setIndoorFilter(enabled) {
-    App.filters.indoor = enabled;
-
-    applyFilters();
-}
-
-
-function setOutdoorFilter(enabled) {
-    App.filters.outdoor = enabled;
-
-    applyFilters();
-}
-
-
 /* ===========================================================
    SORT CONTROL
    =========================================================== */
@@ -602,8 +583,7 @@ function selectAllFilters() {
 function resetFilters() {
     App.filters.search = "";
     App.filters.minHeight = 0;
-    App.filters.indoor = false;
-    App.filters.outdoor = false;
+    App.filters.maxWidth = 0;
     App.filters.sort = "name";
 
     // Restore all categories
@@ -629,13 +609,9 @@ function resetFilters() {
         DOM.heightInput.value = "";
     }
 
-    if (DOM.indoorFilter) {
-        DOM.indoorFilter.checked = false;
-    }
-
-    if (DOM.outdoorFilter) {
-        DOM.outdoorFilter.checked = false;
-    }
+   if (DOM.widthInput) {
+    DOM.widthInput.value = "";
+   }
 
     if (DOM.sortSelect) {
         DOM.sortSelect.value = "name";
@@ -662,6 +638,20 @@ function getWeightNumber(weight) {
     if (!weight) {
         return 0;
     }
+
+   function getDimensionNumber(value) {
+    if (!value) {
+        return 0;
+    }
+
+    const number = Number.parseFloat(
+        String(value).replace(",", ".")
+    );
+
+    return Number.isFinite(number)
+        ? number
+        : 0;
+}
 
     const cleaned = String(weight)
         .replace(/,/g, "")
