@@ -78,8 +78,9 @@ async function initialiseApp() {
         registerDashboardEvents();
 
         renderDashboard();
-        renderSidebar();
-        applyFilters();
+         renderSidebar();
+         applyFilters();
+         updateDashboardSelectionState();
 
         // New additions
         renderComparisonBar();
@@ -607,6 +608,7 @@ if (DOM.sortSelect) DOM.sortSelect.value = "name";
 
     renderSidebar();
     applyFilters();
+   updateDashboardSelectionState();
 }
 
 
@@ -653,6 +655,7 @@ function resetFilters() {
 
     renderSidebar();
     applyFilters();
+   updateDashboardSelectionState();
 }
 
 /* ===========================================================
@@ -705,10 +708,7 @@ function getDimensionNumber(value) {
    =========================================================== */
 
 function renderSidebar() {
-
-    renderCategoryFilters();
-
-    renderManufacturerFilters();
+     renderManufacturerFilters();
 
 }
 
@@ -1002,22 +1002,76 @@ function registerDashboardEvents() {
 function applyDashboardCategoryFilter(category) {
     if (!category) return;
 
-    App.filters.categories.clear();
-
-    if (category === "all") {
-        App.filters.categories = new Set(
+    const allCategories = [
+        ...new Set(
             App.fleet
                 .map(machine => machine.category)
                 .filter(Boolean)
-        );
+        )
+    ];
+
+    if (category === "all") {
+        const allSelected =
+            App.filters.categories.size ===
+            allCategories.length;
+
+        if (allSelected) {
+            App.filters.categories.clear();
+        } else {
+            App.filters.categories =
+                new Set(allCategories);
+        }
     } else {
-        App.filters.categories.add(category);
+        if (App.filters.categories.has(category)) {
+            App.filters.categories.delete(category);
+        } else {
+            App.filters.categories.add(category);
+        }
     }
 
-    renderSidebar();
+    updateDashboardSelectionState();
     applyFilters();
 }
+function updateDashboardSelectionState() {
+    const allCategories = [
+        ...new Set(
+            App.fleet
+                .map(machine => machine.category)
+                .filter(Boolean)
+        )
+    ];
 
+    const allSelected =
+        App.filters.categories.size ===
+        allCategories.length;
+
+    document
+        .querySelectorAll("[data-dashboard-filter]")
+        .forEach(card => {
+
+            const category =
+                card.dataset.dashboardFilter;
+
+            let isSelected = false;
+
+            if (category === "all") {
+                isSelected = allSelected;
+            } else {
+                isSelected =
+                    App.filters.categories.has(category);
+            }
+
+            card.classList.toggle(
+                "is-selected",
+                isSelected
+            );
+
+            card.setAttribute(
+                "aria-pressed",
+                String(isSelected)
+            );
+        });
+}
 
 /* ===========================================================
    FAVOURITES DASHBOARD FILTER
