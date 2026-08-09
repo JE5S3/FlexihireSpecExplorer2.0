@@ -623,15 +623,6 @@ function resetFilters() {
    FILTER HELPERS
    =========================================================== */
 
-function getNumericValue(value) {
-    const number = Number(value);
-
-    return Number.isFinite(number)
-        ? number
-        : 0;
-}
-
-
 function getWeightNumber(weight) {
     if (!weight) {
         return 0;
