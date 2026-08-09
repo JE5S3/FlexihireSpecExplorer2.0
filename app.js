@@ -26,6 +26,7 @@ const App = {
 
     settings: {
         maxCompare: 3
+        heightUnits: "metres"
     }
 };
 
@@ -168,6 +169,20 @@ function registerEvents() {
     "input",
     handleWidthFilter
 );
+
+   document
+    .getElementById("heightMetres")
+    ?.addEventListener(
+        "click",
+        () => setHeightUnits("metres")
+    );
+
+document
+    .getElementById("heightFeet")
+    ?.addEventListener(
+        "click",
+        () => setHeightUnits("feet")
+    );
    
     DOM.sortSelect?.addEventListener(
         "change",
@@ -231,6 +246,26 @@ function handleWidthFilter(event) {
             : 0;
 
     applyFilters();
+}
+
+function setHeightUnits(units) {
+    App.settings.heightUnits = units;
+
+    document
+        .getElementById("heightMetres")
+        ?.classList.toggle(
+            "is-active",
+            units === "metres"
+        );
+
+    document
+        .getElementById("heightFeet")
+        ?.classList.toggle(
+            "is-active",
+            units === "feet"
+        );
+
+    renderFleet();
 }
 
 
@@ -1121,7 +1156,7 @@ function createMachineCard(machine) {
 
                     ${createSpecTile(
                         "Height",
-                        formatMeasurement(machine.maxHeight)
+                        formatHeight(machine.maxHeight)
                     )}
 
                     ${createSpecTile(
@@ -1328,7 +1363,7 @@ function createReachGraphSection(machine) {
                 <div class="reach-summary">
 
                     <span>
-                        ${formatMeasurement(machine.maxHeight)}
+                        ${formatHeight(machine.maxHeight)}
                         <small>Height</small>
                     </span>
 
@@ -1501,6 +1536,32 @@ function renderEmptyFleetState() {
 /* ===========================================================
    CARD FORMAT HELPERS
    =========================================================== */
+
+function formatHeight(value) {
+    const number = Number(value);
+
+    if (!Number.isFinite(number)) {
+        return "—";
+    }
+
+    if (App.settings.heightUnits === "feet") {
+        return `${(number * 3.28084).toFixed(1)} ft`;
+    }
+
+    return `${number} m`;
+}
+
+
+function formatMeasurement(value) {
+    const number =
+        Number(value);
+
+    if (!Number.isFinite(number)) {
+        return "—";
+    }
+
+    return `${number} m`;
+}
 
 function formatMeasurement(value) {
     const number =
@@ -1890,7 +1951,7 @@ function createComparisonTable(machines) {
         {
             label: "Height",
             getValue: machine =>
-                formatMeasurement(
+                formatHeight(
                     machine.maxHeight
                 )
         },
@@ -2733,7 +2794,7 @@ function drawEnvelopeMarkers(
     drawGraphMarker(
         context,
         points.peak,
-        `Max Height ${formatMeasurement(
+        `Max Height ${formatHeight(
             machine.maxHeight
         )}`,
         "top"
