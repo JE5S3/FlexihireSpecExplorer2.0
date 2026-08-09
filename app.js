@@ -155,6 +155,21 @@ function initialiseFilterState() {
    =========================================================== */
 
 function registerEvents() {
+
+    document
+    .getElementById("heightMetres")
+    ?.addEventListener(
+        "click",
+        () => setHeightUnits("metres")
+    );
+
+document
+    .getElementById("heightFeet")
+    ?.addEventListener(
+        "click",
+        () => setHeightUnits("feet")
+    );
+   
     DOM.searchInput?.addEventListener(
         "input",
         debounce(handleSearch, 150)
@@ -169,20 +184,6 @@ function registerEvents() {
     "input",
     handleWidthFilter
 );
-
-   document
-    .getElementById("heightMetres")
-    ?.addEventListener(
-        "click",
-        () => setHeightUnits("metres")
-    );
-
-document
-    .getElementById("heightFeet")
-    ?.addEventListener(
-        "click",
-        () => setHeightUnits("feet")
-    );
    
     DOM.sortSelect?.addEventListener(
         "change",
