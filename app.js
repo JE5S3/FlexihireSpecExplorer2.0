@@ -559,17 +559,15 @@ function selectAllFilters() {
             .filter(Boolean)
     );
 
-    App.filters.indoor = false;
-    App.filters.outdoor = false;
-    App.filters.minHeight = 0;
-    App.filters.search = "";
-    App.filters.sort = "name";
+App.filters.minHeight = 0;
+App.filters.maxWidth = 0;
+App.filters.search = "";
+App.filters.sort = "name";
 
-    if (DOM.searchInput) DOM.searchInput.value = "";
-    if (DOM.heightInput) DOM.heightInput.value = "";
-    if (DOM.indoorFilter) DOM.indoorFilter.checked = false;
-    if (DOM.outdoorFilter) DOM.outdoorFilter.checked = false;
-    if (DOM.sortSelect) DOM.sortSelect.value = "name";
+if (DOM.searchInput) DOM.searchInput.value = "";
+if (DOM.heightInput) DOM.heightInput.value = "";
+if (DOM.widthInput) DOM.widthInput.value = "";
+if (DOM.sortSelect) DOM.sortSelect.value = "name";
 
     renderSidebar();
     applyFilters();
@@ -639,13 +637,27 @@ function getWeightNumber(weight) {
         return 0;
     }
 
-   function getDimensionNumber(value) {
+    const cleaned = String(weight)
+        .replace(/,/g, "")
+        .replace(/[^\d.]/g, "");
+
+    const value = Number.parseFloat(cleaned);
+
+    return Number.isFinite(value)
+        ? value
+        : 0;
+}
+
+
+function getDimensionNumber(value) {
     if (!value) {
         return 0;
     }
 
     const number = Number.parseFloat(
-        String(value).replace(",", ".")
+        String(value)
+            .replace(",", ".")
+            .replace(/[^\d.]/g, "")
     );
 
     return Number.isFinite(number)
