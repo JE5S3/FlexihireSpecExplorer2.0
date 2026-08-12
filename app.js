@@ -213,68 +213,6 @@ function registerEvents() {
         debounce(handleResize, 150)
     );
 
-  /* ===========================================================
-   EVENT REGISTRATION
-   =========================================================== */
-
-function registerEvents() {
-
-    DOM.searchInput?.addEventListener(
-        "input",
-        debounce(handleSearch, 150)
-    );
-
-    DOM.heightInput?.addEventListener(
-        "input",
-        handleHeightFilter
-    );
-
-    DOM.widthInput?.addEventListener(
-        "input",
-        handleWidthFilter
-    );
-
-    document
-        .getElementById("heightMetres")
-        ?.addEventListener(
-            "click",
-            () => setHeightUnits("metres")
-        );
-
-    document
-        .getElementById("heightFeet")
-        ?.addEventListener(
-            "click",
-            () => setHeightUnits("feet")
-        );
-
-    DOM.sortSelect?.addEventListener(
-        "change",
-        event => setSortOrder(
-            event.target.value
-        )
-    );
-
-    DOM.favouritesDashboardButton?.addEventListener(
-        "click",
-        showFavouriteMachines
-    );
-
-    DOM.selectAllButton?.addEventListener(
-        "click",
-        selectAllFilters
-    );
-
-    DOM.clearAllButton?.addEventListener(
-        "click",
-        resetFilters
-    );
-
-    window.addEventListener(
-        "resize",
-        debounce(handleResize, 150)
-    );
-
     // ===========================================================
     // MACHINE IMAGE: CLICK TO EXPAND, HOLD TO COMPARE
     // ===========================================================
