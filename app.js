@@ -218,10 +218,11 @@ function registerEvents() {
     // ===========================================================
     let longPressTimer = null;
     let isLongPress = false;
-    let activePointerId = null;
-    const LONG_PRESS_DURATION = 400; // Optimal hold threshold
+    let startX = 0;
+    let startY = 0;
+    const LONG_PRESS_DURATION = 450; // Milliseconds to register hold
 
-    const clearPressTimer = () => {
+    const cancelTimer = () => {
         if (longPressTimer) {
             clearTimeout(longPressTimer);
             longPressTimer = null;
@@ -229,25 +230,17 @@ function registerEvents() {
     };
 
     DOM.fleetGrid?.addEventListener("pointerdown", (event) => {
-        // Only trigger on primary click / touch
-        if (event.button !== 0 && event.pointerType === "mouse") return;
-
         const imageWrapper = event.target.closest(".machine-image");
         if (!imageWrapper) return;
-
-        // Prevent native image dragging & selection interfering with hold
-        event.preventDefault();
 
         const card = imageWrapper.closest(".machine-card");
         const machineId = card?.dataset?.id;
 
         isLongPress = false;
-        activePointerId = event.pointerId;
+        startX = event.clientX;
+        startY = event.clientY;
 
-        // Capture pointer events so pointerup/cancel fires reliably
-        imageWrapper.setPointerCapture(event.pointerId);
-
-        clearPressTimer();
+        cancelTimer();
 
         longPressTimer = setTimeout(() => {
             isLongPress = true;
@@ -256,7 +249,6 @@ function registerEvents() {
             if (machineId && typeof toggleComparison === "function") {
                 toggleComparison(machineId);
             } else if (card) {
-                // Falls back to clicking the compare card action button
                 const compareBtn = card.querySelector(".card-action");
                 compareBtn?.click();
             }
@@ -267,20 +259,24 @@ function registerEvents() {
         }, LONG_PRESS_DURATION);
     });
 
+    DOM.fleetGrid?.addEventListener("pointermove", (event) => {
+        if (!longPressTimer) return;
+        
+        // If user moves mouse/finger more than 10px (e.g. while scrolling), cancel hold
+        const diffX = Math.abs(event.clientX - startX);
+        const diffY = Math.abs(event.clientY - startY);
+        if (diffX > 10 || diffY > 10) {
+            cancelTimer();
+        }
+    });
+
     DOM.fleetGrid?.addEventListener("pointerup", (event) => {
         const imageWrapper = event.target.closest(".machine-image");
-        
-        clearPressTimer();
+        cancelTimer();
 
         if (!imageWrapper) return;
 
-        // Release pointer capture if held
-        if (activePointerId !== null && imageWrapper.hasPointerCapture(activePointerId)) {
-            imageWrapper.releasePointerCapture(activePointerId);
-            activePointerId = null;
-        }
-
-        // If user released before the timer elapsed, handle as quick click
+        // If release happens before timer expires, toggle specs expansion
         if (!isLongPress) {
             const card = imageWrapper.closest(".machine-card");
             const details = card?.querySelector("details.machine-details");
@@ -295,17 +291,10 @@ function registerEvents() {
         }
     });
 
-    DOM.fleetGrid?.addEventListener("pointercancel", (event) => {
-        clearPressTimer();
-        isLongPress = false;
-        
-        const imageWrapper = event.target.closest(".machine-image");
-        if (activePointerId !== null && imageWrapper?.hasPointerCapture(activePointerId)) {
-            imageWrapper.releasePointerCapture(activePointerId);
-            activePointerId = null;
-        }
-    });
+    DOM.fleetGrid?.addEventListener("pointercancel", cancelTimer);
+    DOM.fleetGrid?.addEventListener("pointerleave", cancelTimer);
 }
+
 /* ===========================================================
    EVENT HANDLERS
    =========================================================== */
