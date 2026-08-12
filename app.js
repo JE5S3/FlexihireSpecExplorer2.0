@@ -214,96 +214,78 @@ function registerEvents() {
     );
 
     // ===========================================================
-    // MACHINE IMAGE: CLICK TO EXPAND, HOLD TO COMPARE
+    // MACHINE IMAGE: QUICK CLICK TO EXPAND, LONG PRESS TO COMPARE
     // ===========================================================
-    let longPressTimer = null;
+    let pressTimer = null;
     let isLongPress = false;
-    let startX = 0;
-    let startY = 0;
-    const LONG_PRESS_DURATION = 450;
 
-    const cancelTimer = () => {
-        if (longPressTimer) {
-            clearTimeout(longPressTimer);
-            longPressTimer = null;
+    // 1. Long Press Detection (Press down)
+    const handlePressStart = (event) => {
+        const imageWrapper = event.target.closest(".machine-image");
+        if (!imageWrapper) return;
+
+        isLongPress = false;
+
+        if (pressTimer) clearTimeout(pressTimer);
+
+        pressTimer = setTimeout(() => {
+            isLongPress = true;
+
+            const card = imageWrapper.closest(".machine-card");
+            if (card) {
+                const compareBtn = card.querySelector(".compare-action") || 
+                                   card.querySelector('[data-action="compare"]');
+
+                if (compareBtn) {
+                    compareBtn.click();
+                }
+            }
+
+            if (navigator.vibrate) navigator.vibrate(40);
+        }, 450); // Hold time in milliseconds
+    };
+
+    // 2. Clear Timer (Release/Cancel)
+    const handlePressEnd = () => {
+        if (pressTimer) {
+            clearTimeout(pressTimer);
+            pressTimer = null;
         }
     };
 
-    DOM.fleetGrid?.addEventListener("pointerdown", (event) => {
+    // Mouse / Touch listeners for long press
+    DOM.fleetGrid?.addEventListener("mousedown", handlePressStart);
+    DOM.fleetGrid?.addEventListener("touchstart", handlePressStart, { passive: true });
+
+    DOM.fleetGrid?.addEventListener("mouseup", handlePressEnd);
+    DOM.fleetGrid?.addEventListener("mouseleave", handlePressEnd);
+    DOM.fleetGrid?.addEventListener("touchend", handlePressEnd);
+    DOM.fleetGrid?.addEventListener("touchcancel", handlePressEnd);
+
+    // 3. Native Click Handler (Quick click to toggle details)
+    DOM.fleetGrid?.addEventListener("click", (event) => {
         const imageWrapper = event.target.closest(".machine-image");
         if (!imageWrapper) return;
+
+        // If it was a long press, prevent opening/closing details
+        if (isLongPress) {
+            event.preventDefault();
+            event.stopPropagation();
+            isLongPress = false;
+            return;
+        }
 
         const card = imageWrapper.closest(".machine-card");
-        if (!card) return;
+        const details = card?.querySelector("details");
 
-        isLongPress = false;
-        startX = event.clientX;
-        startY = event.clientY;
+        if (details) {
+            details.open = !details.open;
 
-        cancelTimer();
-
-        longPressTimer = setTimeout(() => {
-            isLongPress = true;
-
-            const compareBtn = card.querySelector(".compare-action") || 
-                               card.querySelector('[data-action="compare"]');
-
-            if (compareBtn) {
-                compareBtn.click();
-            } else {
-                const machineId = card.querySelector("[data-machine-id]")?.dataset?.machineId;
-                if (machineId && App.comparison) {
-                    if (App.comparison.has(machineId)) {
-                        App.comparison.delete(machineId);
-                    } else if (App.comparison.size < App.settings.maxCompare) {
-                        App.comparison.add(machineId);
-                    }
-                    if (typeof renderDashboard === "function") renderDashboard();
-                    if (typeof renderComparisonBar === "function") renderComparisonBar();
-                }
-            }
-
-            if (navigator.vibrate) {
-                navigator.vibrate(40);
-            }
-        }, LONG_PRESS_DURATION);
-    });
-
-    DOM.fleetGrid?.addEventListener("pointermove", (event) => {
-        if (!longPressTimer) return;
-        
-        const diffX = Math.abs(event.clientX - startX);
-        const diffY = Math.abs(event.clientY - startY);
-        if (diffX > 10 || diffY > 10) {
-            cancelTimer();
-        }
-    });
-
-    DOM.fleetGrid?.addEventListener("pointerup", (event) => {
-        const imageWrapper = event.target.closest(".machine-image");
-        cancelTimer();
-
-        if (!imageWrapper) return;
-
-        if (!isLongPress) {
-            const card = imageWrapper.closest(".machine-card");
-            if (!card) return;
-
-            // Optional chaining safely prevents exceptions if details tag is missing
-            const details = card.querySelector("details");
-
-            if (details) {
-                details.open = !details.open;
-
-                if (details.open) {
-                    card.scrollIntoView({ behavior: "smooth", block: "nearest" });
-                }
+            if (details.open) {
+                card.scrollIntoView({ behavior: "smooth", block: "nearest" });
             }
         }
     });
-
-    DOM.fleetGrid?.addEventListener("pointercancel", cancelTimer);
-    DOM.fleetGrid?.addEventListener("pointerleave", cancelTimer);
 }
 
 /* ===========================================================
