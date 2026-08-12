@@ -213,6 +213,68 @@ function registerEvents() {
         debounce(handleResize, 150)
     );
 
+    // =============================/* ===========================================================
+   EVENT REGISTRATION
+   =========================================================== */
+
+function registerEvents() {
+
+    DOM.searchInput?.addEventListener(
+        "input",
+        debounce(handleSearch, 150)
+    );
+
+    DOM.heightInput?.addEventListener(
+        "input",
+        handleHeightFilter
+    );
+
+    DOM.widthInput?.addEventListener(
+        "input",
+        handleWidthFilter
+    );
+
+    document
+        .getElementById("heightMetres")
+        ?.addEventListener(
+            "click",
+            () => setHeightUnits("metres")
+        );
+
+    document
+        .getElementById("heightFeet")
+        ?.addEventListener(
+            "click",
+            () => setHeightUnits("feet")
+        );
+
+    DOM.sortSelect?.addEventListener(
+        "change",
+        event => setSortOrder(
+            event.target.value
+        )
+    );
+
+    DOM.favouritesDashboardButton?.addEventListener(
+        "click",
+        showFavouriteMachines
+    );
+
+    DOM.selectAllButton?.addEventListener(
+        "click",
+        selectAllFilters
+    );
+
+    DOM.clearAllButton?.addEventListener(
+        "click",
+        resetFilters
+    );
+
+    window.addEventListener(
+        "resize",
+        debounce(handleResize, 150)
+    );
+
     // ===========================================================
     // MACHINE IMAGE: CLICK TO EXPAND, HOLD TO COMPARE
     // ===========================================================
@@ -220,7 +282,7 @@ function registerEvents() {
     let isLongPress = false;
     let startX = 0;
     let startY = 0;
-    const LONG_PRESS_DURATION = 450; // Milliseconds to register hold
+    const LONG_PRESS_DURATION = 450; // Hold duration in ms
 
     const cancelTimer = () => {
         if (longPressTimer) {
@@ -234,7 +296,7 @@ function registerEvents() {
         if (!imageWrapper) return;
 
         const card = imageWrapper.closest(".machine-card");
-        const machineId = card?.dataset?.id;
+        if (!card) return;
 
         isLongPress = false;
         startX = event.clientX;
@@ -245,14 +307,18 @@ function registerEvents() {
         longPressTimer = setTimeout(() => {
             isLongPress = true;
 
-            // Trigger comparison logic
-            if (machineId && typeof toggleComparison === "function") {
-                toggleComparison(machineId);
-            } else if (card) {
-                const compareBtn = card.querySelector(".card-action");
-                compareBtn?.click();
+            // 1. Explicitly target your comparison button inside this card
+            const compareBtn = card.querySelector(".compare-button, [data-action='compare']");
+            
+            if (compareBtn) {
+                compareBtn.click(); // Triggers your comparison click listener directly
+            } else if (typeof toggleComparison === "function") {
+                // 2. Fallback to global compare function using data-id
+                const machineId = card.dataset.id;
+                if (machineId) toggleComparison(machineId);
             }
 
+            // Haptic vibration feedback on mobile
             if (navigator.vibrate) {
                 navigator.vibrate(40);
             }
@@ -262,7 +328,7 @@ function registerEvents() {
     DOM.fleetGrid?.addEventListener("pointermove", (event) => {
         if (!longPressTimer) return;
         
-        // If user moves mouse/finger more than 10px (e.g. while scrolling), cancel hold
+        // Cancel hold if finger/mouse moves (prevents triggering during page scroll)
         const diffX = Math.abs(event.clientX - startX);
         const diffY = Math.abs(event.clientY - startY);
         if (diffX > 10 || diffY > 10) {
@@ -276,7 +342,7 @@ function registerEvents() {
 
         if (!imageWrapper) return;
 
-        // If release happens before timer expires, toggle specs expansion
+        // If quick click (released before timer), expand specifications details
         if (!isLongPress) {
             const card = imageWrapper.closest(".machine-card");
             const details = card?.querySelector("details.machine-details");
