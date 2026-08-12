@@ -590,6 +590,8 @@ button {
     border-bottom: 1px solid var(--border);
     color-scheme: light;
    cursor: pointer;
+   user-select: none;
+    -webkit-user-drag: none;
 }
 
 .machine-image img {
