@@ -212,7 +212,74 @@ DOM.sortSelect?.addEventListener(
         "resize",
         debounce(handleResize, 150)
     );
-}
+
+// ===========================================================
+    // MACHINE IMAGE: CLICK TO EXPAND, HOLD TO COMPARE
+    // ===========================================================
+    let longPressTimer = null;
+    let isLongPress = false;
+    const LONG_PRESS_DURATION = 500; // Time in milliseconds (0.5 seconds)
+
+    DOM.fleetGrid?.addEventListener("pointerdown", (event) => {
+        const imageWrapper = event.target.closest(".machine-image");
+        if (!imageWrapper) return;
+
+        const card = imageWrapper.closest(".machine-card");
+        const machineId = card?.dataset?.id; // Assumes your card has data-id="..." or similar identifier
+
+        isLongPress = false;
+
+        // Start countdown timer when user presses down
+        longPressTimer = setTimeout(() => {
+            isLongPress = true;
+
+            // Trigger your comparison toggle function
+            if (machineId && typeof toggleComparison === "function") {
+                toggleComparison(machineId);
+            } else if (card) {
+                // Alternative: simulate a click on the card's comparison button if available
+                const compareBtn = card.querySelector(".card-action");
+                compareBtn?.click();
+            }
+
+            // Optional visual feedback toast or vibration for mobile
+            if (navigator.vibrate) {
+                navigator.vibrate(50); // Subtle haptic buzz on mobile devices
+            }
+        }, LONG_PRESS_DURATION);
+    });
+
+    // Clear timer on release, leave, or cancel
+    const cancelLongPress = () => {
+        if (longPressTimer) {
+            clearTimeout(longPressTimer);
+            longPressTimer = null;
+        }
+    };
+
+    DOM.fleetGrid?.addEventListener("pointerup", (event) => {
+        const imageWrapper = event.target.closest(".machine-image");
+        cancelLongPress();
+
+        if (!imageWrapper) return;
+
+        // If it was a quick click (not a long press), toggle details expansion
+        if (!isLongPress) {
+            const card = imageWrapper.closest(".machine-card");
+            const details = card?.querySelector("details.machine-details");
+
+            if (details) {
+                details.open = !details.open;
+
+                if (details.open) {
+                    card.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                }
+            }
+        }
+    });
+
+    DOM.fleetGrid?.addEventListener("pointerleave", cancelLongPress);
+    DOM.fleetGrid?.addEventListener("pointercancel", cancelLongPress);
 
 
 /* ===========================================================
