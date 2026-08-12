@@ -1383,14 +1383,16 @@ function createMachineCard(machine) {
 
                     </div>
 
+                    ${
+                        machine.isBoomlift
+                            ? createReachGraphSection(machine)
+                            : ""
+                    }
+
                 </details>
 
 
-                ${
-                    machine.isBoomlift
-                        ? createReachGraphSection(machine)
-                        : ""
-                }
+              
 
 
                 <div class="machine-actions">
@@ -1690,18 +1692,6 @@ function formatMeasurement(value) {
 
     return `${number} m`;
 }
-
-function formatMeasurement(value) {
-    const number =
-        Number(value);
-
-    if (!Number.isFinite(number)) {
-        return "—";
-    }
-
-    return `${number} m`;
-}
-
 
 function formatBoolean(value) {
     if (value === true) {

@@ -852,6 +852,45 @@ button {
     text-align: right;
 }
 
+/* Details container styling */
+details.machine-details {
+    margin-top: 1rem;
+    border-top: 1px solid var(--border-color, #e2e8f0);
+    padding-top: 0.75rem;
+}
+
+details.machine-details summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--brand-primary, #0B131F);
+    user-select: none;
+}
+
+/* Reach Diagram styling inside expanded details */
+.reach-diagram-container {
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px stroke var(--border-subtle, #edf2f7);
+    text-align: center;
+}
+
+.reach-diagram-container h4 {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #4a5568;
+    margin-bottom: 0.75rem;
+}
+
+.reach-diagram-img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+    background-color: #f8fafc;
+    padding: 0.5rem;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
 
 /* ===========================================================
    REACH GRAPH CARD
