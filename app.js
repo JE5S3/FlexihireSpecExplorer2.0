@@ -213,7 +213,7 @@ function registerEvents() {
         debounce(handleResize, 150)
     );
 
-    // =============================/* ===========================================================
+  /* ===========================================================
    EVENT REGISTRATION
    =========================================================== */
 
@@ -307,18 +307,28 @@ function registerEvents() {
         longPressTimer = setTimeout(() => {
             isLongPress = true;
 
-            // 1. Explicitly target your comparison button inside this card
-            const compareBtn = card.querySelector(".compare-button, [data-action='compare']");
-            
+            // 1. Explicitly target the compare button using its specific class/attribute
+            const compareBtn = card.querySelector(".compare-action") || 
+                               card.querySelector('[data-action="compare"]');
+
             if (compareBtn) {
-                compareBtn.click(); // Triggers your comparison click listener directly
-            } else if (typeof toggleComparison === "function") {
-                // 2. Fallback to global compare function using data-id
-                const machineId = card.dataset.id;
-                if (machineId) toggleComparison(machineId);
+                // Programmatically click the compare button to invoke its handler
+                compareBtn.click();
+            } else {
+                // Fallback: search for machine-id anywhere in the card and toggle state directly
+                const machineId = card.querySelector("[data-machine-id]")?.dataset?.machineId;
+                if (machineId && App.comparison) {
+                    if (App.comparison.has(machineId)) {
+                        App.comparison.delete(machineId);
+                    } else if (App.comparison.size < App.settings.maxCompare) {
+                        App.comparison.add(machineId);
+                    }
+                    if (typeof renderDashboard === "function") renderDashboard();
+                    if (typeof renderComparisonBar === "function") renderComparisonBar();
+                }
             }
 
-            // Haptic vibration feedback on mobile
+            // Haptic feedback on mobile devices
             if (navigator.vibrate) {
                 navigator.vibrate(40);
             }
@@ -328,7 +338,7 @@ function registerEvents() {
     DOM.fleetGrid?.addEventListener("pointermove", (event) => {
         if (!longPressTimer) return;
         
-        // Cancel hold if finger/mouse moves (prevents triggering during page scroll)
+        // Cancel hold if finger/mouse moves (prevents triggering during scroll)
         const diffX = Math.abs(event.clientX - startX);
         const diffY = Math.abs(event.clientY - startY);
         if (diffX > 10 || diffY > 10) {
@@ -342,7 +352,7 @@ function registerEvents() {
 
         if (!imageWrapper) return;
 
-        // If quick click (released before timer), expand specifications details
+        // Quick click (released before timer): expand specifications details
         if (!isLongPress) {
             const card = imageWrapper.closest(".machine-card");
             const details = card?.querySelector("details.machine-details");
