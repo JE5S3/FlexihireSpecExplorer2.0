@@ -21,7 +21,7 @@
     --surface-soft: #fafafa;
 
     --text: #222222;
-    --text-muted: #6f6f6f;
+    --text-muted: #444444;
     --text-light: #8b8b8b;
 
     --border: #e5e7eb;
@@ -124,6 +124,7 @@ h1 {
 
     font-size: clamp(1.7rem, 3vw, 2.4rem);
     line-height: 1.15;
+   color: #ffffff;
 }
 
 h2 {
@@ -160,7 +161,7 @@ p {
 .topbar {
     position: relative;
 
-    background: var(#000000);
+    background: #000000;
 
     border-bottom: 4px solid var(--primary);
 
