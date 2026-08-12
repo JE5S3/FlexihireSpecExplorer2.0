@@ -187,6 +187,42 @@ function registerEvents() {
         );
 
     DOM.sortSelect?.addEventListener(
+        "change",/* ===========================================================
+   EVENT REGISTRATION
+   =========================================================== */
+
+function registerEvents() {
+
+    DOM.searchInput?.addEventListener(
+        "input",
+        debounce(handleSearch, 150)
+    );
+
+    DOM.heightInput?.addEventListener(
+        "input",
+        handleHeightFilter
+    );
+
+    DOM.widthInput?.addEventListener(
+        "input",
+        handleWidthFilter
+    );
+
+    document
+        .getElementById("heightMetres")
+        ?.addEventListener(
+            "click",
+            () => setHeightUnits("metres")
+        );
+
+    document
+        .getElementById("heightFeet")
+        ?.addEventListener(
+            "click",
+            () => setHeightUnits("feet")
+        );
+
+    DOM.sortSelect?.addEventListener(
         "change",
         event => setSortOrder(
             event.target.value
@@ -220,7 +256,7 @@ function registerEvents() {
     let isLongPress = false;
     let startX = 0;
     let startY = 0;
-    const LONG_PRESS_DURATION = 450; // Hold duration in ms
+    const LONG_PRESS_DURATION = 450;
 
     const cancelTimer = () => {
         if (longPressTimer) {
@@ -245,15 +281,12 @@ function registerEvents() {
         longPressTimer = setTimeout(() => {
             isLongPress = true;
 
-            // 1. Explicitly target the compare button using its specific class/attribute
             const compareBtn = card.querySelector(".compare-action") || 
                                card.querySelector('[data-action="compare"]');
 
             if (compareBtn) {
-                // Programmatically click the compare button to invoke its handler
                 compareBtn.click();
             } else {
-                // Fallback: search for machine-id anywhere in the card and toggle state directly
                 const machineId = card.querySelector("[data-machine-id]")?.dataset?.machineId;
                 if (machineId && App.comparison) {
                     if (App.comparison.has(machineId)) {
@@ -266,7 +299,6 @@ function registerEvents() {
                 }
             }
 
-            // Haptic feedback on mobile devices
             if (navigator.vibrate) {
                 navigator.vibrate(40);
             }
@@ -276,7 +308,6 @@ function registerEvents() {
     DOM.fleetGrid?.addEventListener("pointermove", (event) => {
         if (!longPressTimer) return;
         
-        // Cancel hold if finger/mouse moves (prevents triggering during scroll)
         const diffX = Math.abs(event.clientX - startX);
         const diffY = Math.abs(event.clientY - startY);
         if (diffX > 10 || diffY > 10) {
@@ -290,10 +321,12 @@ function registerEvents() {
 
         if (!imageWrapper) return;
 
-        // Quick click (released before timer): expand specifications details
         if (!isLongPress) {
             const card = imageWrapper.closest(".machine-card");
-            const details = card?.querySelector("details.machine-details");
+            if (!card) return;
+
+            // Optional chaining safely prevents exceptions if details tag is missing
+            const details = card.querySelector("details");
 
             if (details) {
                 details.open = !details.open;
