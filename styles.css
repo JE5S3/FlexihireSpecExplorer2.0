@@ -16,8 +16,8 @@
     --charcoal: #252525;
     --charcoal-light: #3a3a3a;
 
-    --background: #000000 ;
-    --surface: #000000;
+    --background: #ffffff ;
+    --surface: #ffffff;
     --surface-soft: #fafafa;
 
     --text: #222222;
@@ -160,7 +160,7 @@ p {
 .topbar {
     position: relative;
 
-    background: var(--surface);
+    background: var(#000000);
 
     border-bottom: 4px solid var(--primary);
 
