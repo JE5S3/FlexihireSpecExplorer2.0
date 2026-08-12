@@ -157,7 +157,7 @@ function initialiseFilterState() {
 
 function registerEvents() {
 
-   DOM.searchInput?.addEventListener(
+    DOM.searchInput?.addEventListener(
         "input",
         debounce(handleSearch, 150)
     );
@@ -167,31 +167,31 @@ function registerEvents() {
         handleHeightFilter
     );
 
-DOM.widthInput?.addEventListener(
-    "input",
-    handleWidthFilter
-);
-
-document
-    .getElementById("heightMetres")
-    ?.addEventListener(
-        "click",
-        () => setHeightUnits("metres")
+    DOM.widthInput?.addEventListener(
+        "input",
+        handleWidthFilter
     );
 
-document
-    .getElementById("heightFeet")
-    ?.addEventListener(
-        "click",
-        () => setHeightUnits("feet")
-    );
+    document
+        .getElementById("heightMetres")
+        ?.addEventListener(
+            "click",
+            () => setHeightUnits("metres")
+        );
 
-DOM.sortSelect?.addEventListener(
-    "change",
-    event => setSortOrder(
-        event.target.value
-    )
-);
+    document
+        .getElementById("heightFeet")
+        ?.addEventListener(
+            "click",
+            () => setHeightUnits("feet")
+        );
+
+    DOM.sortSelect?.addEventListener(
+        "change",
+        event => setSortOrder(
+            event.target.value
+        )
+    );
 
     DOM.favouritesDashboardButton?.addEventListener(
         "click",
@@ -213,57 +213,74 @@ DOM.sortSelect?.addEventListener(
         debounce(handleResize, 150)
     );
 
-// ===========================================================
+    // ===========================================================
     // MACHINE IMAGE: CLICK TO EXPAND, HOLD TO COMPARE
     // ===========================================================
     let longPressTimer = null;
     let isLongPress = false;
-    const LONG_PRESS_DURATION = 500; // Time in milliseconds (0.5 seconds)
+    let activePointerId = null;
+    const LONG_PRESS_DURATION = 400; // Optimal hold threshold
 
-    DOM.fleetGrid?.addEventListener("pointerdown", (event) => {
-        const imageWrapper = event.target.closest(".machine-image");
-        if (!imageWrapper) return;
-
-        const card = imageWrapper.closest(".machine-card");
-        const machineId = card?.dataset?.id; // Assumes your card has data-id="..." or similar identifier
-
-        isLongPress = false;
-
-        // Start countdown timer when user presses down
-        longPressTimer = setTimeout(() => {
-            isLongPress = true;
-
-            // Trigger your comparison toggle function
-            if (machineId && typeof toggleComparison === "function") {
-                toggleComparison(machineId);
-            } else if (card) {
-                // Alternative: simulate a click on the card's comparison button if available
-                const compareBtn = card.querySelector(".card-action");
-                compareBtn?.click();
-            }
-
-            // Optional visual feedback toast or vibration for mobile
-            if (navigator.vibrate) {
-                navigator.vibrate(50); // Subtle haptic buzz on mobile devices
-            }
-        }, LONG_PRESS_DURATION);
-    });
-
-    // Clear timer on release, leave, or cancel
-    const cancelLongPress = () => {
+    const clearPressTimer = () => {
         if (longPressTimer) {
             clearTimeout(longPressTimer);
             longPressTimer = null;
         }
     };
 
+    DOM.fleetGrid?.addEventListener("pointerdown", (event) => {
+        // Only trigger on primary click / touch
+        if (event.button !== 0 && event.pointerType === "mouse") return;
+
+        const imageWrapper = event.target.closest(".machine-image");
+        if (!imageWrapper) return;
+
+        // Prevent native image dragging & selection interfering with hold
+        event.preventDefault();
+
+        const card = imageWrapper.closest(".machine-card");
+        const machineId = card?.dataset?.id;
+
+        isLongPress = false;
+        activePointerId = event.pointerId;
+
+        // Capture pointer events so pointerup/cancel fires reliably
+        imageWrapper.setPointerCapture(event.pointerId);
+
+        clearPressTimer();
+
+        longPressTimer = setTimeout(() => {
+            isLongPress = true;
+
+            // Trigger comparison logic
+            if (machineId && typeof toggleComparison === "function") {
+                toggleComparison(machineId);
+            } else if (card) {
+                // Falls back to clicking the compare card action button
+                const compareBtn = card.querySelector(".card-action");
+                compareBtn?.click();
+            }
+
+            if (navigator.vibrate) {
+                navigator.vibrate(40);
+            }
+        }, LONG_PRESS_DURATION);
+    });
+
     DOM.fleetGrid?.addEventListener("pointerup", (event) => {
         const imageWrapper = event.target.closest(".machine-image");
-        cancelLongPress();
+        
+        clearPressTimer();
 
         if (!imageWrapper) return;
 
-        // If it was a quick click (not a long press), toggle details expansion
+        // Release pointer capture if held
+        if (activePointerId !== null && imageWrapper.hasPointerCapture(activePointerId)) {
+            imageWrapper.releasePointerCapture(activePointerId);
+            activePointerId = null;
+        }
+
+        // If user released before the timer elapsed, handle as quick click
         if (!isLongPress) {
             const card = imageWrapper.closest(".machine-card");
             const details = card?.querySelector("details.machine-details");
@@ -278,10 +295,17 @@ DOM.sortSelect?.addEventListener(
         }
     });
 
-    DOM.fleetGrid?.addEventListener("pointerleave", cancelLongPress);
-    DOM.fleetGrid?.addEventListener("pointercancel", cancelLongPress);
-
-
+    DOM.fleetGrid?.addEventListener("pointercancel", (event) => {
+        clearPressTimer();
+        isLongPress = false;
+        
+        const imageWrapper = event.target.closest(".machine-image");
+        if (activePointerId !== null && imageWrapper?.hasPointerCapture(activePointerId)) {
+            imageWrapper.releasePointerCapture(activePointerId);
+            activePointerId = null;
+        }
+    });
+}
 /* ===========================================================
    EVENT HANDLERS
    =========================================================== */
