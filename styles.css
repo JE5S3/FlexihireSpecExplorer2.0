@@ -653,6 +653,26 @@ button {
     transform: scale(1.035);
 }
 
+/* ===========================================================
+   MACHINE WATERMARK
+   =========================================================== */
+
+.machine-watermark {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 10px 0 0;
+}
+
+.machine-watermark img {
+    width: 56px;
+    height: auto;
+
+    opacity: 0.12;
+    pointer-events: none;
+    user-select: none;
+}
 
 /* ===========================================================
    CATEGORY BADGE

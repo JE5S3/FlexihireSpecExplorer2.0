@@ -1299,7 +1299,12 @@ function createMachineCard(machine) {
             <div class="machine-content">
 
                 <div class="machine-heading">
-
+                    <div class="machine-watermark">
+                        <img
+                            src="images/flexihire-watermark.png"
+                            alt="Flexihire watermark"
+                        >
+                    </div>
                     <span class="machine-manufacturer">
                         ${escapeHTML(manufacturer)}
                     </span>
