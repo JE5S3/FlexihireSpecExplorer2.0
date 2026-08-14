@@ -107,7 +107,7 @@
 <section class="sidebar-card">
 
     <h2>
-        Working Height Units
+        Platform Height Units
     </h2>
 
     <div class="unit-toggle">
@@ -147,12 +147,19 @@
                 autocomplete="off"
             >
 
-            <input
+           <input
                 id="heightInput"
                 type="number"
                 min="0"
                 step="0.5"
-                placeholder="Minimum height (m)"
+                placeholder="Minimum platform height (m)"
+            >
+            <input
+                id="reachInput"
+                type="number"
+                min="0"
+                step="0.5"
+                placeholder="Minimum horizontal reach (m)"
             >
 
             <input
@@ -190,11 +197,11 @@
                 </option>
 
                 <option value="height-high">
-                    Height: High to Low
+                   Platform Height: High to Low
                 </option>
 
                 <option value="height-low">
-                    Height: Low to High
+                   Platform Height: Low to High
                 </option>
 
                 <option value="width-low">
@@ -206,11 +213,11 @@
                 </option>
 
                 <option value="reach-high">
-                    Reach: High to Low
+                   Horizontal Reach: High to Low
                 </option>
 
                 <option value="reach-low">
-                    Reach: Low to High
+                   Horizontal Reach: Low to High
                 </option>
 
                 <option value="weight-high">

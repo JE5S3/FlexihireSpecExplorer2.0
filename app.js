@@ -15,11 +15,12 @@ const App = {
     favourites: new Set(),
     comparison: new Set(),
 
- filters: {
+filters: {
     search: "",
     categories: new Set(),
     manufacturers: new Set(),
     minHeight: 0,
+    minReach: 0,
     maxWidth: 0,
     sort: "name"
 },
@@ -38,6 +39,7 @@ const App = {
 const DOM = {
    searchInput: document.getElementById("searchInput"),
    heightInput: document.getElementById("heightInput"),
+   reachInput: document.getElementById("reachInput"),
    widthInput: document.getElementById("widthInput"),
 
    sortSelect: document.getElementById("sortSelect"),
@@ -163,14 +165,19 @@ function registerEvents() {
     );
 
     DOM.heightInput?.addEventListener(
-        "input",
-        handleHeightFilter
-    );
+    "input",
+    handleHeightFilter
+);
 
-    DOM.widthInput?.addEventListener(
-        "input",
-        handleWidthFilter
-    );
+DOM.reachInput?.addEventListener(
+    "input",
+    handleReachFilter
+);
+
+DOM.widthInput?.addEventListener(
+    "input",
+    handleWidthFilter
+);
 
     document
         .getElementById("heightMetres")
@@ -311,6 +318,16 @@ function handleHeightFilter(event) {
 
     applyFilters();
 }
+function handleReachFilter(event) {
+    const value = Number.parseFloat(event.target.value);
+
+    App.filters.minReach =
+        Number.isFinite(value) && value > 0
+            ? value
+            : 0;
+
+    applyFilters();
+}
 
 function handleWidthFilter(event) {
     const value = Number.parseFloat(event.target.value);
@@ -422,10 +439,11 @@ function applyFilters() {
     let machines = [...App.fleet];
 
    machines = machines.filter(matchesSearch);
-   machines = machines.filter(matchesHeight);
-   machines = machines.filter(matchesWidth);
-   machines = machines.filter(matchesCategory);
-   machines = machines.filter(matchesManufacturer);
+machines = machines.filter(matchesHeight);
+machines = machines.filter(matchesReach);
+machines = machines.filter(matchesWidth);
+machines = machines.filter(matchesCategory);
+machines = machines.filter(matchesManufacturer);
 
     machines = sortFleet(machines);
 
@@ -480,6 +498,19 @@ function matchesHeight(machine) {
 
     return Number.isFinite(machineHeight) &&
         machineHeight >= minimumHeight;
+}
+
+function matchesReach(machine) {
+    const minimumReach = App.filters.minReach;
+
+    if (!minimumReach) {
+        return true;
+    }
+
+    const machineReach = Number(machine.maxReach);
+
+    return Number.isFinite(machineReach) &&
+        machineReach >= minimumReach;
 }
 
 function matchesWidth(machine) {
@@ -670,12 +701,14 @@ function selectAllFilters() {
     );
 
 App.filters.minHeight = 0;
+App.filters.minReach = 0;
 App.filters.maxWidth = 0;
 App.filters.search = "";
 App.filters.sort = "name";
 
 if (DOM.searchInput) DOM.searchInput.value = "";
 if (DOM.heightInput) DOM.heightInput.value = "";
+if (DOM.reachInput) DOM.reachInput.value = "";
 if (DOM.widthInput) DOM.widthInput.value = "";
 if (DOM.sortSelect) DOM.sortSelect.value = "name";
 
@@ -692,6 +725,7 @@ if (DOM.sortSelect) DOM.sortSelect.value = "name";
 function resetFilters() {
     App.filters.search = "";
     App.filters.minHeight = 0;
+    App.filters.minReach = 0;
     App.filters.maxWidth = 0;
     App.filters.sort = "name";
 
@@ -717,6 +751,10 @@ function resetFilters() {
     if (DOM.heightInput) {
         DOM.heightInput.value = "";
     }
+
+    if (DOM.reachInput) {
+    DOM.reachInput.value = "";
+}
 
    if (DOM.widthInput) {
     DOM.widthInput.value = "";
