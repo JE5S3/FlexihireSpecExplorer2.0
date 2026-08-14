@@ -1903,6 +1903,42 @@ footer {
     }
 }
 
+/* ===========================================================
+   Scroll Button
+   =========================================================== */
+
+
+.mobile-filter-jump {
+    display: none;
+}
+
+@media (max-width: 700px) {
+
+    .mobile-filter-jump {
+        position: fixed;
+
+        right: 16px;
+        bottom: 16px;
+
+        z-index: 1000;
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        min-height: 44px;
+        padding: 0 16px;
+
+        background: var(--primary);
+        color: #ffffff;
+
+        border-radius: 999px;
+
+        box-shadow: var(--shadow-lg);
+
+        font-weight: 700;
+    }
+}
 
 /* ===========================================================
    REDUCED MOTION

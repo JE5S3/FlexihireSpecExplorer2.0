@@ -220,6 +220,19 @@ DOM.widthInput?.addEventListener(
         debounce(handleResize, 150)
     );
 
+    document
+    .getElementById("mobileFilterJump")
+    ?.addEventListener("click", () => {
+
+        document
+            .querySelector(".sidebar")
+            ?.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+
+    });
+
     // ===========================================================
     // MACHINE IMAGE: QUICK CLICK TO EXPAND, LONG PRESS TO COMPARE
     // ===========================================================
