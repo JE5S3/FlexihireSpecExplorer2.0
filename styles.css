@@ -1917,8 +1917,8 @@ footer {
     .mobile-filter-jump {
         position: fixed;
 
-        right: 16px;
-        bottom: 16px;
+        right: 20px;
+        bottom: 20px;
 
         z-index: 1000;
 
