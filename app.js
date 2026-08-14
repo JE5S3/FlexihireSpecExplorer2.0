@@ -1437,11 +1437,11 @@ function createMachineCard(machine) {
 
                     <button
                         type="button"
-                        class="card-action favourite-action ${isFavourite ? "is-active" : ""}"
-                        data-action="favourite"
+                        class="card-action copy-action"
+                        data-action="copy"
                         data-machine-id="${escapeHTML(machine.id)}"
                     >
-                        ${isFavourite ? "★ Favourited" : "☆ Favourite"}
+                        Copy Specs
                     </button>
 
                     <button
@@ -1603,6 +1603,19 @@ function registerMachineCardEvents() {
             );
         });
 
+
+
+        DOM.fleetGrid
+        .querySelectorAll(
+            "[data-action='copy']"
+        )
+        .forEach(button => {
+            button.addEventListener(
+                "click",
+                handleCopyAction
+        );
+    });
+
     DOM.fleetGrid
         .querySelectorAll(
             "[data-action='compare']"
@@ -1627,6 +1640,59 @@ function handleFavouriteAction(event) {
     toggleFavourite(machineId);
     renderDashboard();
     renderFleet();
+}
+
+/* ===========================================================
+   COPY ACTION
+   =========================================================== */
+
+async function handleCopyAction(event) {
+    const button = event.currentTarget;
+    const machineId = button.dataset.machineId;
+
+    if (!machineId) return;
+
+    const machine = getMachineById(machineId);
+
+    if (!machine) return;
+
+    const dimensions = machine.dimensions || {};
+
+    const copyText = [
+        machine.name || `${machine.manufacturer || ""} ${machine.model || ""}`.trim(),        "",
+        `Platform Height: ${formatHeight(machine.maxHeight)}`,
+        `Horizontal Reach: ${
+            machine.maxReach
+                ? formatMeasurement(machine.maxReach)
+                : "—"
+        }`,
+        `Platform Capacity: ${machine.platformCapacity || "—"}`,
+        `Weight: ${machine.weight || "—"}`,
+        `Dimensions:`,
+            `Length: ${dimensions.length || "—"}`,
+            `Width: ${dimensions.width || "—"}`,
+            `Height: ${dimensions.height || "—"}`
+    ].join("\n");
+
+    try {
+        await navigator.clipboard.writeText(copyText);
+
+        const originalText = button.textContent;
+
+        button.textContent = "✓ Copied";
+        button.classList.add("is-active");
+
+        setTimeout(() => {
+            button.textContent = originalText;
+            button.classList.remove("is-active");
+        }, 1500);
+
+    } catch (error) {
+        console.error(
+            "Unable to copy machine specifications:",
+            error
+        );
+    }
 }
 
 
