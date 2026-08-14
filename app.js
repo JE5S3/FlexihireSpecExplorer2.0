@@ -897,24 +897,27 @@ function renderManufacturerFilters() {
 
         document.querySelector(".sidebar")
             .appendChild(section);
-
     }
 
     const manufacturers = [...new Set(
-
         App.fleet.map(machine => machine.manufacturer)
-
     )]
-
-    .filter(Boolean)
-
-    .sort();
+        .filter(Boolean)
+        .sort();
 
     section.innerHTML = `
+        <details class="manufacturer-dropdown">
+            <summary>
+                <span>Manufacturers</span>
+                <span class="manufacturer-arrow">⌄</span>
+            </summary>
 
-        <h2>Manufacturers</h2>
-
+            <div class="manufacturer-options"></div>
+        </details>
     `;
+
+    const optionsContainer =
+        section.querySelector(".manufacturer-options");
 
     manufacturers.forEach(manufacturer => {
 
@@ -923,7 +926,6 @@ function renderManufacturerFilters() {
         label.className = "filter-checkbox";
 
         label.innerHTML = `
-
             <input
                 type="checkbox"
                 ${App.filters.manufacturers.has(manufacturer) ? "checked" : ""}
@@ -937,20 +939,15 @@ function renderManufacturerFilters() {
                         machine.manufacturer === manufacturer
                 ).length
             }</small>
-
         `;
 
         label.querySelector("input")
             .addEventListener("change", () => {
-
                 toggleManufacturer(manufacturer);
-
             });
 
-        section.appendChild(label);
-
+        optionsContainer.appendChild(label);
     });
-
 }
 
 

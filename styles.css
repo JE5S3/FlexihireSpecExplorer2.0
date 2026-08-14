@@ -383,6 +383,47 @@ p {
     font-size: 0.75rem;
 }
 
+/* ===========================================================
+   MANUFACTURER DROPDOWN
+   =========================================================== */
+
+.manufacturer-dropdown {
+    width: 100%;
+}
+
+.manufacturer-dropdown summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    cursor: pointer;
+    list-style: none;
+
+    color: var(--charcoal);
+
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.manufacturer-dropdown summary::-webkit-details-marker {
+    display: none;
+}
+
+.manufacturer-arrow {
+    font-size: 1.1rem;
+
+    transition:
+        transform var(--transition);
+}
+
+.manufacturer-dropdown[open] .manufacturer-arrow {
+    transform: rotate(180deg);
+}
+
+.manufacturer-options {
+    margin-top: 14px;
+}
+
 
 /* ===========================================================
    BUTTONS
