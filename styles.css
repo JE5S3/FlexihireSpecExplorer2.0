@@ -840,6 +840,30 @@ button {
     white-space: nowrap;
 }
 
+.machine-manufacturer.manufacturer-skyjack {
+    color: #d71920;
+}
+
+.machine-manufacturer.manufacturer-genie {
+    color: #0057a8;
+}
+
+.machine-manufacturer.manufacturer-jlg {
+    color: #f58220;
+}
+
+.machine-manufacturer.manufacturer-snorkel {
+    color: #e31837;
+}
+
+.machine-manufacturer.manufacturer-haulotte {
+    color: #f5a623;
+}
+
+.machine-manufacturer.manufacturer-nifty {
+    color: #5b2c83;
+}
+
 
 /* ===========================================================
    EXPANDABLE SPECIFICATIONS

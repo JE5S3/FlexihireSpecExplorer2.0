@@ -1305,8 +1305,8 @@ function createMachineCard(machine) {
                             alt="Flexihire watermark"
                         >
                     </div>
-                    <span class="machine-manufacturer">
-                        ${escapeHTML(manufacturer)}
+                  <span class="machine-manufacturer manufacturer-${manufacturer.toLowerCase().replace(/\s+/g, "-")}">
+                    ${escapeHTML(manufacturer)}
                     </span>
 
                     <h2 class="machine-title">
