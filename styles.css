@@ -184,7 +184,7 @@ p {
 }
 
 .logo img {
-    width: clamp(180px, 18vw, 260px);
+    width: clamp(250px, 22vw, 350px);
     height: auto;
 }
 
