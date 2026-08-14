@@ -383,6 +383,43 @@ p {
     font-size: 0.75rem;
 }
 
+@media (max-width: 700px) {
+
+    .stat {
+        flex: 0 0 92px;
+    }
+
+    .stats-bar {
+        padding-right: 28px;
+    }
+}
+
+@media (max-width: 700px) {
+
+    .stats-bar-wrapper {
+        position: relative;
+    }
+
+    .stats-bar-wrapper::after {
+        content: "";
+
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+
+        width: 32px;
+
+        background: linear-gradient(
+            to right,
+            transparent,
+            var(--background)
+        );
+
+        pointer-events: none;
+    }
+}
+
 /* ===========================================================
    MANUFACTURER DROPDOWN
    =========================================================== */
