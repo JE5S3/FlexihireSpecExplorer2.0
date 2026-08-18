@@ -165,12 +165,12 @@ function registerEvents() {
     );
 
     DOM.heightInput?.addEventListener(
-    "input",
+    "change",
     handleHeightFilter
 );
 
 DOM.reachInput?.addEventListener(
-    "input",
+    "change",
     handleReachFilter
 );
 

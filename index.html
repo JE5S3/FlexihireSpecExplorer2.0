@@ -147,20 +147,36 @@
                 autocomplete="off"
             >
 
-           <input
+                    <select
                 id="heightInput"
-                type="number"
-                min="0"
-                step="0.5"
-                placeholder="Minimum platform height (m)"
+                aria-label="Minimum platform height"
             >
-            <input
+                <option value="">Any Platform Height</option>
+                <option value="5">5 m+</option>
+                <option value="10">10 m+</option>
+                <option value="15">15 m+</option>
+                <option value="20">20 m+</option>
+                <option value="25">25 m+</option>
+                <option value="30">30 m+</option>
+                <option value="35">35 m+</option>
+                <option value="40">40 m+</option>
+                <option value="45">45 m+</option>
+                <option value="50">50 m+</option>
+            </select>
+
+            <select
                 id="reachInput"
-                type="number"
-                min="0"
-                step="0.5"
-                placeholder="Minimum horizontal reach (m)"
+                aria-label="Minimum horizontal reach"
             >
+                <option value="">Any Horizontal Reach</option>
+                <option value="5">5 m+</option>
+                <option value="10">10 m+</option>
+                <option value="15">15 m+</option>
+                <option value="20">20 m+</option>
+                <option value="25">25 m+</option>
+                <option value="30">30 m+</option>
+                <option value="35">35 m+</option>
+            </select>
 
             <input
             id="widthInput"
