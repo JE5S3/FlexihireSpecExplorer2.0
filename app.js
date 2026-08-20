@@ -22,12 +22,12 @@ filters: {
     minHeight: 0,
     minReach: 0,
     maxWidth: 0,
-    sort: "name"
+    sort: "height-low"
 },
 
     settings: {
         maxCompare: 3,
-        heightUnits: "metres"
+        heightUnits: "feet"
     }
 };
 
@@ -717,13 +717,13 @@ App.filters.minHeight = 0;
 App.filters.minReach = 0;
 App.filters.maxWidth = 0;
 App.filters.search = "";
-App.filters.sort = "name";
+App.filters.sort = "height-low";
 
 if (DOM.searchInput) DOM.searchInput.value = "";
 if (DOM.heightInput) DOM.heightInput.value = "";
 if (DOM.reachInput) DOM.reachInput.value = "";
 if (DOM.widthInput) DOM.widthInput.value = "";
-if (DOM.sortSelect) DOM.sortSelect.value = "name";
+if (DOM.sortSelect) DOM.sortSelect.value = "height-low";
 
     renderSidebar();
     applyFilters();
@@ -740,7 +740,7 @@ function resetFilters() {
     App.filters.minHeight = 0;
     App.filters.minReach = 0;
     App.filters.maxWidth = 0;
-    App.filters.sort = "name";
+    App.filters.sort = "height-low";
 
     // Restore all categories
     App.filters.categories = new Set(
@@ -774,7 +774,7 @@ function resetFilters() {
    }
 
     if (DOM.sortSelect) {
-        DOM.sortSelect.value = "name";
+        DOM.sortSelect.value = "height-low";
     }
 
     renderSidebar();
