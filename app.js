@@ -83,6 +83,7 @@ async function initialiseApp() {
          renderSidebar();
          applyFilters();
          updateDashboardSelectionState();
+         updateMeasurementDropdowns();
 
         // New additions
         renderComparisonBar();
@@ -370,7 +371,61 @@ function setHeightUnits(units) {
             units === "feet"
         );
 
+    updateMeasurementDropdowns();
+
     renderFleet();
+}
+
+function updateMeasurementDropdowns() {
+    const useFeet =
+        App.settings.heightUnits === "feet";
+
+    updateMeasurementSelect(
+        DOM.heightInput,
+        "Any Platform Height",
+        useFeet
+    );
+
+    updateMeasurementSelect(
+        DOM.reachInput,
+        "Any Horizontal Reach",
+        useFeet
+    );
+}
+
+
+function updateMeasurementSelect(
+    select,
+    defaultLabel,
+    useFeet
+) {
+    if (!select) return;
+
+    [...select.options].forEach(option => {
+
+        if (!option.value) {
+            option.textContent = defaultLabel;
+            return;
+        }
+
+        const metres =
+            Number.parseFloat(option.value);
+
+        if (!Number.isFinite(metres)) {
+            return;
+        }
+
+        if (useFeet) {
+            const feet =
+                Math.round(metres * 3.28084);
+
+            option.textContent =
+                `${feet} ft+`;
+        } else {
+            option.textContent =
+                `${metres} m+`;
+        }
+    });
 }
 
 
